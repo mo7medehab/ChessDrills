@@ -1,0 +1,55 @@
+name: train-chess
+
+services:
+  db:
+    container_name: postgres
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: chesstrain
+    ports:
+      - 5432:5432
+    volumes:
+      - ./Database:/docker-entrypoint-initdb.d/db.sql
+      - ./Database:/var/lib/postgresql
+    networks:
+      - train-chess
+  pgadmin:
+    container_name: pgadmin-container
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "5050:80"
+  api:
+    container_name: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file: ./backend/.env
+    ports:
+      - 3000:3000
+    networks:
+      - train-chess
+    depends_on:
+      - db
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    env_file: ./frontend/.env
+    ports:
+      - 5137:5137
+    networks:
+      - train-chess
+
+networks:
+  train-chess:
+    driver: bridge
+  
