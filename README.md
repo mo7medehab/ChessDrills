@@ -27,9 +27,13 @@ This full stack project uses:
 To run this project you will need github and docker
 
 First, clone this repository:
-`git clone https://github.com/mo7medehab/ChessDrills.git`
+```
+git clone https://github.com/mo7medehab/ChessDrills.git
+```
 
 Then go to the file location and run docker compose:
-`docker compose up --build`
+```
+docker compose up --build
+```
 
 you can access this website at localhost:5137
